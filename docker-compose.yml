@@ -10,6 +10,9 @@ services:
     hostname: kafka
     environment:
       KAFKA_HEAP_OPTS: -Xmx256M -Xms128M
+      KAFKA_LISTENERS: LISTENER_1://localhost:9092
+      KAFKA_ADVERTISED_LISTENERS: LISTENER_1://localhost:9092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: LISTENER_FRED:PLAINTEXT
     ports:
       - 9092:9092
     depends_on:
