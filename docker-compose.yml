@@ -1,22 +1,26 @@
 services:
   zookeeper:
-    image: aawaali/alpine-zookeeper
+    image: bitnami/zookeeper
     container_name: zookeeper
     ports:
       - 2181:2181
+    environment:
+      - ALLOW_ANONYMOUS_LOGIN=yes
   kafka:
-    image: aawaali/alpine-kafka
+    image: bitnami/kafka
     container_name: kafka
     hostname: kafka
     environment:
-      KAFKA_HEAP_OPTS: -Xmx256M -Xms128M
-      KAFKA_LISTENERS: INTERNAL://0.0.0.0:9092,EXTERNAL://0.0.0.0:19092
-      KAFKA_ADVERTISED_LISTENERS: "INTERNAL://${INTERNAL_IP}:9092,EXTERNAL://${EXTERNAL_IP}:19092"
-      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INTERNAL:PLAINTEXT,EXTERNAL:PLAINTEXT
-      KAFKA_INTER_BROKER_LISTENER_NAME: INTERNAL
+      - KAFKA_HEAP_OPTS=-Xmx256M -Xms128M
+      - KAFKA_BROKER_ID=1
+      - KAFKA_CFG_ZOOKEEPER_CONNECT=zookeeper:2181
+      - ALLOW_PLAINTEXT_LISTENER=yes
+      - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=CLIENT:PLAINTEXT,EXTERNAL:PLAINTEXT
+      - KAFKA_CFG_LISTENERS=CLIENT://${INTERNAL_IP}:9092,EXTERNAL:${EXTERNAL_IP}//:9093
+      - KAFKA_CFG_ADVERTISED_LISTENERS=CLIENT://kafka:9092,EXTERNAL://localhost:9093
+      - KAFKA_CFG_INTER_BROKER_LISTENER_NAME=CLIENT
     ports:
-      - 9092:9092
-      - 19092:19092
+      - 9093:9093
     depends_on:
       - zookeeper
   mongo:
