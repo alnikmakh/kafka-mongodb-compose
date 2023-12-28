@@ -8,6 +8,8 @@ services:
     image: aawaali/alpine-kafka
     container_name: kafka
     hostname: kafka
+    environment:
+      KAFKA_HEAP_OPTS: -Xmx256M -Xms128M
     ports:
       - 9092:9092
     depends_on:
