@@ -10,6 +10,8 @@ services:
     image: bitnami/kafka
     container_name: kafka
     hostname: kafka
+    env_file:
+      - .env
     environment:
       - KAFKA_HEAP_OPTS=-Xmx256M -Xms128M
       - KAFKA_BROKER_ID=1
